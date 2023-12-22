@@ -5,9 +5,12 @@ ENV POSTGRES_USER postgres
 ENV POSTGRES_PASSWORD yahia2002
 
 COPY init.sql /docker-entrypoint-initdb.d/
-RUN chmod 777  /var/lib/postgresql/data
+RUN chown -R 1009090000:1009090000 /var/lib/postgresql/data
+RUN chown -R 1009090000:1009090000 /var/run/postgresql
 
 # Expose the PostgreSQL port
 EXPOSE 5432
+
+
 
 
