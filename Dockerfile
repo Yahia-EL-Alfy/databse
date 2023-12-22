@@ -1,27 +1,23 @@
+# Use a base image
 FROM golang:latest
 
+# Set the working directory
 WORKDIR /app
+
+# Copy go.mod and go.sum files to download dependencies
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy the rest of the application code
 COPY . .
 
-# Define build-time environment variables
-ARG DB_HOST=yayadb
-ARG DB_PORT=5432
-ARG DB_USER=postgres
-ARG DB_PASSWORD=yahia2002
-ARG DB_NAME=toolsproject
-ARG PORT=8080
-ARG ALLOWED_ORIGINS=http://localhost:80
+# Expose the port the app runs on
+# EXPOSE 8080
 
-# Set build-time environment variables as runtime environment variables
-ENV DB_HOST=$DB_HOST
-ENV DB_PORT=$DB_PORT
-ENV DB_USER=$DB_USER
-ENV DB_PASSWORD=$DB_PASSWORD
-ENV DB_NAME=$DB_NAME
-ENV PORT=$PORT
-ENV ALLOWED_ORIGINS=$ALLOWED_ORIGINS
-
-RUN go mod download
+# Build the Go application
 RUN go build -o main .
 
+# Command to run the application
 CMD ["./main"]
