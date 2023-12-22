@@ -24,7 +24,7 @@ RUN ["npx", "ng", "build"]
 FROM nginxinc/nginx-unprivileged:alpine3.18-perl
 
 # Copy the Nginx configuration template
-COPY --chown=nginx:nginx docker/nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY --chown=nginx:nginx default.conf.template /etc/nginx/templates/default.conf.template
 
 # Copy the built Angular application to the Nginx document root
 COPY --chown=nginx:nginx --from=build /app/dist/tools-project /var/www/html/
