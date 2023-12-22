@@ -55,7 +55,7 @@ type SlotResponse struct {
 }
 
 func initDB() {
-	host := getEnv("DB_HOST", "postgres")
+	host := getEnv("DB_HOST", "yayadb")
 	port := getEnvAsInt("DB_PORT", 5432)
 	user := getEnv("DB_USER", "postgres")
 	password := getEnv("DB_PASSWORD", "yahia2002")

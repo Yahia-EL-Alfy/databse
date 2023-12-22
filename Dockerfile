@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 
 # Define build-time environment variables
-ARG DB_HOST=postgres
+ARG DB_HOST=yayadb
 ARG DB_PORT=5432
 ARG DB_USER=postgres
 ARG DB_PASSWORD=yahia2002
