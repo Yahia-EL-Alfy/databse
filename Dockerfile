@@ -1,30 +1,31 @@
-# Use an official Node.js Alpine image as the build environment
+# Stage 1: Build the Angular application
 FROM node:18.18.0-alpine3.18 AS build
 
-# Set the working directory in the container
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
-COPY ["package.json", "package-lock.json", "./"]
+COPY package*.json ./
 
-
-# Set the npm registry if needed (uncomment and modify as necessary)
-RUN ["npm", "config", "set", "registry", "https://registry.npmjs.org/"]
-
-# Run npm install in a way that handles network issues
-RUN ["npm", "ci"]
+# Install dependencies
+RUN npm install
 
 # Copy the rest of the application code to the working directory
 COPY . .
 
 # Build the Angular application
-RUN ["npx", "ng", "build"]
+RUN npm run build
 
-# Use an official Nginx image for serving the application
-FROM nginxinc/nginx-unprivileged:alpine3.18-perl
-
-# Copy the Nginx configuration template
-COPY --chown=nginx:nginx docker/nginx/default.conf.template /etc/nginx/templates/default.conf.template
+# Stage 2: Use an official Nginx image for serving the application
+FROM nginx:1.21.1-alpine
 
 # Copy the built Angular application to the Nginx document root
-COPY --chown=nginx:nginx --from=build /app/dist/tools-project /var/www/html/
+COPY --from=build /app/dist/tools-project /usr/share/nginx/html
+
+# Copy Nginx configuration
+COPY docker/nginx/default.conf.template /etc/nginx/templates/default.conf.template
+
+# Expose port 80
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
